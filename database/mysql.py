@@ -10,9 +10,6 @@ from fastapi import FastAPI
 from tortoise.contrib.fastapi import register_tortoise
 import os
 
-from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv(), override=True)
-
 # -----------------------数据库配置-----------------------------------
 DB_ORM_CONFIG = {
     "connections": {  # 连接配置池

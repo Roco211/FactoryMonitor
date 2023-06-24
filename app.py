@@ -7,7 +7,7 @@
 """
 from fastapi import FastAPI
 from api import router
-
+from config import settings
 
 def create_app():
     _app = FastAPI()
