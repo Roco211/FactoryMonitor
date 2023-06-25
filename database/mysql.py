@@ -26,7 +26,7 @@ DB_ORM_CONFIG = {
     },
     "apps": {
         "base": {  # 名为base的tortoise应用
-                "models": ["models.user"],  # 指定注册的模型为modes.base
+                "models": ["models.user","models.device_alert"],  # 指定注册的模型为modes.base
                 "default_connection": "base"  # 默认使用的连接配置，上述connections的base
                 },
     },
