@@ -5,3 +5,11 @@
 @Project:app
 @Des: user模型
 """
+
+from tortoise import Model, fields
+
+
+class User(Model):
+    username = fields.CharField(max_length=16)
+    password = fields.CharField(max_length=16)
+

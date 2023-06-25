@@ -8,11 +8,12 @@
 from fastapi import FastAPI
 from api import router
 from config import settings
+from database.mysql import register_mysql
+from event import startup
 
-def create_app():
-    _app = FastAPI()
-    _app.include_router(router)
-    return _app
+app = FastAPI()
 
 
-app = create_app()
+# 事件监听
+app.add_event_handler("startup", startup(app))
+
