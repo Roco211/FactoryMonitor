@@ -6,6 +6,7 @@
 @Des: 描述
 """
 from models.device_alert import DeviceAlert
+from datetime import datetime, timedelta
 from fastapi import Request
 from .schemas import DeviceAlert
 from models.device_alert import DeviceAlert
@@ -20,6 +21,11 @@ class DeviceAlertService:
         await DeviceAlert.create(**data)
         return {"status": 200, "msg": "OK"}
 
+
+    async def alert_get(self, date, offset=None, limit=99999, **query):
+        device_alert_dict = await DeviceAlert.filter(start_time__gt=date) \
+                        .filter(**query).limit(limit).offset(offset).all()
+        return {"status": 200, "msg": device_alert_dict}
 
 
 device_alert_service = DeviceAlertService()
