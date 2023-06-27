@@ -19,4 +19,6 @@ class DeviceAlert(BaseModel):
     alert_code: str = Field(max_length=8)
     start_time: str
     end_time: str
-    total_time: int
+    time_difference: int
+    shift: str
+    category: str

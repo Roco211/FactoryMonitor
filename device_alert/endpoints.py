@@ -17,6 +17,7 @@ async def alter_add(device_alert: DeviceAlert, req: Request):
     res = await device_alert_service.alert_add(device_alert, req)
     return res
 
+
 @router.get("/{date}")
 async def get_alter(
         req: Request,

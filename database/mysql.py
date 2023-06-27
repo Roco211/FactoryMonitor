@@ -40,6 +40,6 @@ async def register_mysql(app: FastAPI):
     register_tortoise(
         app,  # 通过依赖注入的app对象
         config=DB_ORM_CONFIG,  # orm配置
-        generate_schemas=False,  # 是否生成表
+        generate_schemas=True,  # 是否生成表
         add_exception_handlers=False,  # 是否添加异常处理类
     )
