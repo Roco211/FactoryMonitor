@@ -8,8 +8,8 @@
 from fastapi import FastAPI
 from api import router
 from config import settings
-from database.mysql import register_mysql
 from event import startup
+import uvicorn
 
 app = FastAPI()
 
@@ -17,3 +17,8 @@ app = FastAPI()
 # 事件监听
 app.add_event_handler("startup", startup(app))
 
+app.include_router(router)
+
+
+if __name__ == "__main__":
+    uvicorn.run(app="app:app", host="0.0.0.0", port=8000, reload=True)
