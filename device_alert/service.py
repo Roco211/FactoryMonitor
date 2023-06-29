@@ -5,7 +5,7 @@
 @Project:app
 @Des: 描述
 """
-from models.device_alert import DeviceAlert
+from models.device_alert import DeviceAlert, AlertInfo
 from datetime import datetime, timedelta
 from fastapi import Request
 from .schemas import DeviceAlert
@@ -24,7 +24,7 @@ class DeviceAlertService:
 
     async def alert_get(self, date, offset=None, limit=99999, **query):
         device_alert_dict = await DeviceAlert.filter(start_time__gt=date) \
-                        .filter(**query).limit(limit).offset(offset).all()
+                        .filter(**query).limit(limit).offset(offset).all().values()
         return {"status": 200, "msg": device_alert_dict}
 
 

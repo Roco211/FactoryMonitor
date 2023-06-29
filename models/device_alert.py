@@ -17,6 +17,7 @@ class DeviceAlert(Model):
     category = fields.CharField(max_length=8, description="报警类别")  # 类别
     shift = fields.CharField(max_length=8, description="报警开始时的班别")  # 班别
     alert_code = fields.CharField(max_length=8, description="报警代码")  # 报警代码
+    alert_desc = fields.CharField(max_length=255, description="报警描述")  # 报警代码
     start_time = fields.DatetimeField(description="报警开始时间")  # 报警开始时间
     end_time = fields.DatetimeField(description="报警结束时间")  # 报警结束时间
     time_difference = fields.IntField(description="开始到结束时间差")  # 时间差

@@ -13,10 +13,14 @@ class DeviceAlert(BaseModel):
     """
     设备报警模型校验
     """
-    hostname: str = Field(max_length=32)
-    model: str = Field(max_length=8)
-    station: str = Field(max_length=8)
-    alert_code: str = Field(max_length=8)
+    hostname: str = Field(max_length=16)
+    model: str
+    station: str
+    line: str
+    category: str
+    shift: str
+    alert_code: str
+    alert_desc: str
     start_time: str
     end_time: str
     time_difference: int
