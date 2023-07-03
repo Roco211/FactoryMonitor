@@ -12,22 +12,22 @@ from .service import device_alert_service
 router = APIRouter(prefix="/device-alerts")
 
 
-@router.post("/")
+@router.post("/", description="上传设备报警参数")
 async def alter_add(device_alert: DeviceAlert, req: Request):
     res = await device_alert_service.alert_add(device_alert, req)
     return res
 
 
-@router.get("/")
-async def get_alter(
+@router.get("/", description="设备报警参数条件查询")
+async def alter_get(
         req: Request,
-        start_date: str = Query(None, min_length=8, max_length=8),
-        end_date: str = Query(None, min_length=8, max_length=8),
-        model: str = Query(None, max_length=8),
-        station: str = Query(None, max_length=8),
-        alert_code: str = Query(None, max_length=8),
-        limit: int = Query(99999),
-        offset: int = Query(0)
+        start_date: str = Query(None, min_length=8, max_length=8, description="开始日期"),
+        end_date: str = Query(None, min_length=8, max_length=8, description="结束日期"),
+        model: str = Query(None, max_length=8, description="机种名"),
+        station: str = Query(None, max_length=8, description="站别名"),
+        alert_code: str = Query(None, max_length=8, description="报警代码"),
+        limit: int = Query(99999, description="分页获取每页数量"),
+        offset: int = Query(0, description="分页获取数据偏移量")
 ) -> dict:
     # 查询参数
     query = {}

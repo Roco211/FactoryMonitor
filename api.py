@@ -14,7 +14,7 @@ from device_alert.endpoints import router as device_alert_router
 router = APIRouter(prefix="/api/v1")
 
 router.include_router(user_router)
-router.include_router(device_alert_router)
+router.include_router(device_alert_router, tags=['设备报警参数'])
 
 
 @router.get("/ping", response_model=BaseResp)

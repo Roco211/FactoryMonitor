@@ -11,8 +11,8 @@ from fastapi import Request
 from .schemas import DeviceAlert
 from models.device_alert import DeviceAlert
 
-class DeviceAlertService:
 
+class DeviceAlertService:
     async def alert_add(self, devicd_alert: DeviceAlert, req: Request):
         # 插入数据
         data: dict = devicd_alert.dict()
@@ -20,7 +20,6 @@ class DeviceAlertService:
         data.update({"ip": ip})
         await DeviceAlert.create(**data)
         return {"status": 200, "msg": "OK"}
-
 
     async def alert_get(self, offset=None, limit=99999, **query):
         device_alert_dict = await DeviceAlert.filter(**query).limit(limit).offset(offset).all().values()
