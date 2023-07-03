@@ -27,7 +27,10 @@ async def alter_get(
         end_date: str = Query(None, min_length=8, max_length=8, description="结束日期"),
         model: str = Query(None, max_length=8, description="机种名"),
         station: str = Query(None, max_length=8, description="站别名"),
+        line: str = Query(None, max_length=8, description="站别名"),
+        category: str = Query(None, max_length=8, description="报警代码"),
         alert_code: str = Query(None, max_length=8, description="报警代码"),
+        shift: str = Query(None, max_length=8, description="报警代码"),
         limit: int = Query(99999, description="分页获取每页数量"),
         offset: int = Query(0, description="分页获取数据偏移量"),
 
@@ -54,6 +57,12 @@ async def alter_get(
         query.update({"station": station})
     if alert_code:
         query.update({"alert_code": alert_code})
+    if line:
+        query.update({"line": line})
+    if category:
+        query.update({"category": category})
+    if shift:
+        query.update({"shift": shift})
 
     res = await device_alert_service.alert_get(offset, limit, **query)
     return res
