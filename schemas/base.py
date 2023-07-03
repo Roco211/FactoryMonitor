@@ -5,10 +5,12 @@
 @Project:FactoryMonitor
 @Des: 基础数据校验
 """
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from typing import Any
 
 
 class BaseResp(BaseModel):
-    status: int
-    msg: str
-
+    code: int
+    status: str
+    message: str
+    data: Any

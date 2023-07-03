@@ -14,6 +14,7 @@ class DeviceAlert(Model):
     ip = fields.CharField(max_length=16, description="客户端IP")  # ip地址
     model = fields.CharField(max_length=16, description="机种名")
     station = fields.CharField(max_length=16, description="站别名")
+    line = fields.CharField(max_length=8, description="线别")
     category = fields.CharField(max_length=8, description="报警类别")  # 类别
     shift = fields.CharField(max_length=8, description="报警开始时的班别")  # 班别
     alert_code = fields.CharField(max_length=8, description="报警代码")  # 报警代码

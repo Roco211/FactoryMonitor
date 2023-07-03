@@ -7,8 +7,10 @@
 """
 import datetime
 from fastapi import APIRouter, Request, Query, Path
+from typing import Union
 from .schemas import DeviceAlert
 from .service import device_alert_service
+from schemas.response import base_response
 router = APIRouter(prefix="/device-alerts")
 
 
@@ -27,8 +29,9 @@ async def alter_get(
         station: str = Query(None, max_length=8, description="站别名"),
         alert_code: str = Query(None, max_length=8, description="报警代码"),
         limit: int = Query(99999, description="分页获取每页数量"),
-        offset: int = Query(0, description="分页获取数据偏移量")
-) -> dict:
+        offset: int = Query(0, description="分页获取数据偏移量"),
+
+) -> Union[dict]:
     # 查询参数
     query = {}
 
@@ -37,13 +40,13 @@ async def alter_get(
             start_time = datetime.datetime.strptime(start_date, "%Y%m%d")
             query.update({"start_time__gte": start_time})
         except ValueError:
-            return {"status": 400, "msg": f"日期参数错误 {start_date}"}
+            return {"code": 400, "status": "fail", "message": "日期参数错误", "data": []}
     if end_date:
         try:
             end_time = datetime.datetime.strptime(end_date, "%Y%m%d") + datetime.timedelta(days=1)
             query.update({"end_time__lt": end_time})
         except ValueError:
-            return {"status": 400, "msg": f"日期参数错误 {start_date}"}
+            return {"code": 400, "status": "fail", "message": "日期参数错误", "data": []}
 
     if model:
         query.update({"model": model})
