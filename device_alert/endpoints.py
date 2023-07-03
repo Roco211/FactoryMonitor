@@ -5,11 +5,11 @@
 @Project:app
 @Des: 描述
 """
-from datetime import datetime
+import datetime
 from fastapi import APIRouter, Request, Query, Path
 from .schemas import DeviceAlert
 from .service import device_alert_service
-router = APIRouter(prefix="/device-alert")
+router = APIRouter(prefix="/device-alerts")
 
 
 @router.post("/")
@@ -18,10 +18,11 @@ async def alter_add(device_alert: DeviceAlert, req: Request):
     return res
 
 
-@router.get("/{date}")
+@router.get("/")
 async def get_alter(
         req: Request,
-        date: str = Path(..., min_length=8, max_length=8),
+        start_date: str = Query(None, min_length=8, max_length=8),
+        end_date: str = Query(None, min_length=8, max_length=8),
         model: str = Query(None, max_length=8),
         station: str = Query(None, max_length=8),
         alert_code: str = Query(None, max_length=8),
@@ -31,11 +32,19 @@ async def get_alter(
     # 查询参数
     query = {}
 
-    if date:
+    if start_date:
         try:
-            date = datetime.strptime(date, "%Y%m%d")
+            start_time = datetime.datetime.strptime(start_date, "%Y%m%d")
+            query.update({"start_time__gte": start_time})
         except ValueError:
-            return {"status": 400, "msg": f"日期参数错误 {date}"}
+            return {"status": 400, "msg": f"日期参数错误 {start_date}"}
+    if end_date:
+        try:
+            end_time = datetime.datetime.strptime(end_date, "%Y%m%d") + datetime.timedelta(days=1)
+            query.update({"end_time__lt": end_time})
+        except ValueError:
+            return {"status": 400, "msg": f"日期参数错误 {start_date}"}
+
     if model:
         query.update({"model": model})
     if station:
@@ -43,6 +52,6 @@ async def get_alter(
     if alert_code:
         query.update({"alert_code": alert_code})
 
-    res = await device_alert_service.alert_get(date, offset, limit, **query)
+    res = await device_alert_service.alert_get(offset, limit, **query)
     return res
 

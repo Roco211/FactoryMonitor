@@ -22,9 +22,8 @@ class DeviceAlertService:
         return {"status": 200, "msg": "OK"}
 
 
-    async def alert_get(self, date, offset=None, limit=99999, **query):
-        device_alert_dict = await DeviceAlert.filter(start_time__gt=date) \
-                        .filter(**query).limit(limit).offset(offset).all().values()
+    async def alert_get(self, offset=None, limit=99999, **query):
+        device_alert_dict = await DeviceAlert.filter(**query).limit(limit).offset(offset).all().values()
         return {"status": 200, "msg": device_alert_dict}
 
 
