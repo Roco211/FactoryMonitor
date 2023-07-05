@@ -31,6 +31,7 @@ class DeviceAlertUpdate(DeviceAlert):
     """
     设备报警信息Patch校验模型
     """
+    hostname: Optional[str] = Field(max_length=32, description="主机名")
     category: Optional[str] = Field(max_length=32, description="报警分类")
     shift: Optional[str] = Field(max_length=32, description="班别")
     alert_desc: Optional[str] = Field(max_length=255, description="报警描述")

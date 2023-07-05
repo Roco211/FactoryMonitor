@@ -90,10 +90,26 @@ async def alert_update(
         "alert_code": device_alert_update.alert_code,
         "start_time": device_alert_update.start_time
     }
-    is_update = await device_alert_service.alert_update(unique, **device_alert_update.dict())
-    if is_update:
+    is_updated = await device_alert_service.alert_update(unique, **device_alert_update.dict())
+    if is_updated:
         return base_response(200, "success", "资源更新成功")
     else:
-        return base_response(304, "fail", f"资源未被更新")
+        return base_response(304, "fail", "资源未被更新")
 
 
+@router.delete("/", description="删除一条设备报警参数", summary="设备报警信息删除")
+async def alert_delete(
+        device_alert_update: DeviceAlertUpdate
+):
+    unique = {
+        "model": device_alert_update.model,
+        "station": device_alert_update.station,
+        "line": device_alert_update.line,
+        "alert_code": device_alert_update.alert_code,
+        "start_time": device_alert_update.start_time
+    }
+    is_deleted = await device_alert_service.alert_delete(unique)
+    if is_deleted:
+        return base_response(200, "success", "资源删除成功")
+    else:
+        return base_response(404, "fail", "未找到该资源")

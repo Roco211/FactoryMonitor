@@ -34,6 +34,13 @@ class DeviceAlertService:
         else:
             return False
 
+    async def alert_delete(self, unique):
+        is_deleted = await DeviceAlert.filter(**unique).delete()
+        if is_deleted:
+            return True
+        else:
+            return False
+
     async def check_server_info_existence(self, **query):
         print(query)
         is_exist = await DeviceAlert.filter(**query).first()
