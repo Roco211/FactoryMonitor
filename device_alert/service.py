@@ -23,8 +23,17 @@ class DeviceAlertService:
         return base_response(200, "success", "上传成功")
 
     async def alert_get(self, offset=None, limit=99999, **query):
-        device_alert_dict = await DeviceAlert.filter(**query).order_by('-start_time').limit(limit).offset(offset*limit).all().values()
+        device_alert_dict = await DeviceAlert.filter(**query).order_by('-start_time').limit(limit).offset(
+            offset * limit).all().values()
         return base_response(200, "success", f"查询到{len(device_alert_dict)}条记录", device_alert_dict)
+
+    async def check_server_info_existence(self, **query):
+        print(query)
+        is_exist = await DeviceAlert.filter(**query).first()
+        if is_exist:
+            return True
+        else:
+            return False
 
 
 device_alert_service = DeviceAlertService()

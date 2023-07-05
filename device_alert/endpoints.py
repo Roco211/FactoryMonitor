@@ -14,13 +14,24 @@ from schemas.response import base_response
 router = APIRouter(prefix="/device-alerts")
 
 
-@router.post("/", description="上传设备报警参数")
+@router.post("/", description="上传设备报警参数", summary="设备报警信息上传")
 async def alter_add(device_alert: DeviceAlert, req: Request):
-    res = await device_alert_service.alert_add(device_alert, req)
-    return res
+    unique = {
+        "model": device_alert.model,
+        "station": device_alert.station,
+        "line": device_alert.line,
+        "alert_code": device_alert.alert_code,
+        "start_time": device_alert.start_time
+    }
+    is_exist = await device_alert_service.check_server_info_existence(**unique)
+    if not is_exist:
+        res = await device_alert_service.alert_add(device_alert, req)
+        return res
+    else:
+        return base_response(409, "fail", f"此报警信息已存在")
 
 
-@router.get("/", description="设备报警参数条件查询")
+@router.get("/", description="设备报警参数条件查询", summary="设备报警信息查询")
 async def alter_get(
         req: Request,
         start_date: str = Query(None, min_length=8, max_length=8, description="开始日期"),
