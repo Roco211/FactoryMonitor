@@ -27,6 +27,13 @@ class DeviceAlertService:
             offset * limit).all().values()
         return base_response(200, "success", f"查询到{len(device_alert_dict)}条记录", device_alert_dict)
 
+    async def alert_update(self, unique, **query):
+        is_update = await DeviceAlert.filter(**unique).update(**query)
+        if is_update:
+            return True
+        else:
+            return False
+
     async def check_server_info_existence(self, **query):
         print(query)
         is_exist = await DeviceAlert.filter(**query).first()

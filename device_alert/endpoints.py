@@ -8,7 +8,7 @@
 import datetime
 from fastapi import APIRouter, Request, Query, Path
 from typing import Union
-from .schemas import DeviceAlert
+from .schemas import DeviceAlert, DeviceAlertUpdate
 from .service import device_alert_service
 from schemas.response import base_response
 router = APIRouter(prefix="/device-alerts")
@@ -77,4 +77,23 @@ async def alter_get(
 
     res = await device_alert_service.alert_get(offset, limit, **query)
     return res
+
+
+@router.patch("/", description="修改一条设备报警参数", summary="设备报警信息修改")
+async def alert_update(
+        device_alert_update: DeviceAlertUpdate
+):
+    unique = {
+        "model": device_alert_update.model,
+        "station": device_alert_update.station,
+        "line": device_alert_update.line,
+        "alert_code": device_alert_update.alert_code,
+        "start_time": device_alert_update.start_time
+    }
+    is_update = await device_alert_service.alert_update(unique, **device_alert_update.dict())
+    if is_update:
+        return base_response(200, "success", "资源更新成功")
+    else:
+        return base_response(304, "fail", f"资源未被更新")
+
 

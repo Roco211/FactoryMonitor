@@ -7,6 +7,7 @@
 """
 
 from pydantic import BaseModel, Field
+from typing import Optional
 
 
 class DeviceAlert(BaseModel):
@@ -24,3 +25,14 @@ class DeviceAlert(BaseModel):
     start_time: str = Field(max_length=32, description="报警开始时间")
     end_time: str = Field(max_length=32, description="报警结束时间")
     time_difference: int = Field(description="报警持续时间")
+
+
+class DeviceAlertUpdate(DeviceAlert):
+    """
+    设备报警信息Patch校验模型
+    """
+    category: Optional[str] = Field(max_length=32, description="报警分类")
+    shift: Optional[str] = Field(max_length=32, description="班别")
+    alert_desc: Optional[str] = Field(max_length=255, description="报警描述")
+    end_time: Optional[str] = Field(max_length=32, description="报警结束时间")
+    time_difference: Optional[str] = Field(description="报警持续时间")
