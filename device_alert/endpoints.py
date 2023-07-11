@@ -6,6 +6,8 @@
 @Des: 描述
 """
 import datetime
+import os
+
 from fastapi import APIRouter, Request, Query, Path
 from typing import Union
 from .schemas import DeviceAlert, DeviceAlertUpdate
@@ -49,15 +51,17 @@ async def alter_get(
     # 查询参数
     query = {}
 
+    shift_delta_hours = int(os.getenv('SHIFT_TIMEDELTA_HOURS'))
     if start_date:
         try:
-            start_time = datetime.datetime.strptime(start_date, "%Y%m%d")
+            start_time = datetime.datetime.strptime(start_date, "%Y%m%d") - datetime.timedelta(hours=shift_delta_hours)
             query.update({"start_time__gte": start_time})
         except ValueError:
             return {"code": 400, "status": "fail", "message": "日期参数错误", "data": []}
     if end_date:
         try:
-            end_time = datetime.datetime.strptime(end_date, "%Y%m%d") + datetime.timedelta(days=1)
+            end_time = datetime.datetime.strptime(end_date, "%Y%m%d") \
+                       + datetime.timedelta(days=1) - datetime.timedelta(hours=shift_delta_hours)
             query.update({"end_time__lt": end_time})
         except ValueError:
             return {"code": 400, "status": "fail", "message": "日期参数错误", "data": []}
