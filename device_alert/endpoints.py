@@ -117,3 +117,21 @@ async def alert_delete(
         return base_response(200, "success", "资源删除成功")
     else:
         return base_response(404, "fail", "未找到该资源")
+
+
+@router.get("/models", description="查询设备报警信息表中已维护机种", summary="设备报警已维护机种查询")
+async def models_get():
+    models = await device_alert_service.field_distinct_get("model")
+    return base_response(200, "success", "获取机种成功", models)
+
+
+@router.get("/lines", description="查询设备报警信息表中已维护线别", summary="设备报警已维护线别查询")
+async def models_get():
+    models = await device_alert_service.field_distinct_get("line")
+    return base_response(200, "success", "获取线别成功", models)
+
+
+@router.get("/stations", description="查询设备报警信息表中已维护站别", summary="设备报警已维护站别查询")
+async def models_get():
+    models = await device_alert_service.field_distinct_get("station")
+    return base_response(200, "success", "获取站别成功", models)

@@ -5,6 +5,7 @@
 @Project:app
 @Des: 描述
 """
+import time
 from models.device_alert import DeviceAlert, AlertInfo
 from datetime import datetime, timedelta
 from schemas.response import base_response
@@ -23,9 +24,11 @@ class DeviceAlertService:
         return base_response(200, "success", "上传成功")
 
     async def alert_get(self, offset=None, limit=99999, **query):
+        start = time.time()
         device_alert_dict = await DeviceAlert.filter(**query).order_by('-start_time').limit(limit).offset(
             offset * limit).all().values()
-        return base_response(200, "success", f"查询到{len(device_alert_dict)}条记录", device_alert_dict)
+        t = round(float(time.time() - start), 2)
+        return base_response(200, "success", f"查询到{len(device_alert_dict)}条记录,耗时{t}s", device_alert_dict)
 
     async def alert_update(self, unique, **query):
         is_update = await DeviceAlert.filter(**unique).update(**query)
@@ -42,12 +45,20 @@ class DeviceAlertService:
             return False
 
     async def check_server_info_existence(self, **query):
-        print(query)
         is_exist = await DeviceAlert.filter(**query).first()
         if is_exist:
             return True
         else:
             return False
+
+    async def field_distinct_get(self, field):
+        datas = await DeviceAlert.raw(
+            f"""
+            SELECT DISTINCT {field} FROM device_alerts;
+            """
+        )
+        res = [getattr(data, field) for data in datas]
+        return res
 
 
 device_alert_service = DeviceAlertService()
