@@ -8,6 +8,7 @@
 import datetime
 import os
 
+from kit import utils
 from fastapi import APIRouter, Request, Query, Path
 from typing import Union
 from .schemas import DeviceAlert, DeviceAlertUpdate
@@ -38,6 +39,7 @@ async def alter_get(
         req: Request,
         start_date: str = Query(None, min_length=8, max_length=8, description="开始日期"),
         end_date: str = Query(None, min_length=8, max_length=8, description="结束日期"),
+        date: str = Query(None, min_length=6, max_length=6, description="年月"),
         model: str = Query(None, max_length=8, description="机种名"),
         station: str = Query(None, max_length=8, description="站别名"),
         line: str = Query(None, max_length=8, description="站别名"),
@@ -78,6 +80,19 @@ async def alter_get(
         query.update({"category": category})
     if shift:
         query.update({"shift": shift})
+    if date:
+        print("受到了日期参数")
+        try:
+            d = datetime.datetime.strptime(date, "%Y%m")
+            year = d.strftime("%Y")
+            month = d.strftime("%m")
+        except ValueError:
+            return {"code": 400, "status": "fail", "message": "日期参数错误", "data": []}
+        start_time, end_time = utils.get_month_range(int(year), int(month))
+        query.update({
+            "start_time__gte": start_time,
+            "end_time__lt": end_time
+        })
 
     res = await device_alert_service.alert_get(offset, limit, **query)
     return res

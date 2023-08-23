@@ -20,13 +20,17 @@ class DeviceAlertService:
         data: dict = devicd_alert.dict()
         ip, port = req.client
         data.update({"ip": ip})
+
+        current_date = datetime.now() - timedelta(days=3)
+        _, week, _ = (current_date + timedelta(days=1)).isocalendar()
+        data.update({"week": int(week)})
         await DeviceAlert.create(**data)
         return base_response(200, "success", "上传成功")
 
     async def alert_get(self, offset=None, limit=99999, **query):
         start = time.time()
         device_alert_dict = await DeviceAlert.filter(**query).order_by('-start_time').limit(limit).offset(
-            offset * limit).all().values('model', 'station', 'line', 'category', 'shift', 'alert_code', 'alert_desc', 'time_difference', 'start_time', 'end_time')
+            offset * limit).all().values()
         t = round(float(time.time() - start), 2)
         return base_response(200, "success", f"查询到{len(device_alert_dict)}条记录,耗时{t}s", device_alert_dict)
 

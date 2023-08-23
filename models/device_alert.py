@@ -22,6 +22,7 @@ class DeviceAlert(Model):
     start_time = fields.DatetimeField(description="报警开始时间")  # 报警开始时间
     end_time = fields.DatetimeField(description="报警结束时间")  # 报警结束时间
     time_difference = fields.IntField(description="开始到结束时间差")  # 时间差
+    week = fields.SmallIntField(description="报警发生周别")
     created_at = fields.DatetimeField(auto_now_add=True)
     updated_at = fields.DatetimeField(auto_now=True)
 
