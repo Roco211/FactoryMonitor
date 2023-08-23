@@ -10,7 +10,7 @@ import os
 
 from kit import utils
 from fastapi import APIRouter, Request, Query, Path
-from typing import Union
+from typing import Union, Optional
 from .schemas import DeviceAlert, DeviceAlertUpdate
 from .service import device_alert_service
 from schemas.response import base_response
@@ -36,10 +36,10 @@ async def alter_add(device_alert: DeviceAlert, req: Request):
 
 @router.get("/", description="设备报警参数条件查询", summary="设备报警信息查询")
 async def alter_get(
-        req: Request,
         start_date: str = Query(None, min_length=8, max_length=8, description="开始日期"),
         end_date: str = Query(None, min_length=8, max_length=8, description="结束日期"),
         date: str = Query(None, min_length=6, max_length=6, description="年月"),
+        week: int = Query(None, description="周别"),
         model: str = Query(None, max_length=8, description="机种名"),
         station: str = Query(None, max_length=8, description="站别名"),
         line: str = Query(None, max_length=8, description="站别名"),
@@ -60,6 +60,7 @@ async def alter_get(
             query.update({"start_time__gte": start_time})
         except ValueError:
             return {"code": 400, "status": "fail", "message": "日期参数错误", "data": []}
+
     if end_date:
         try:
             end_time = datetime.datetime.strptime(end_date, "%Y%m%d") \
@@ -80,6 +81,8 @@ async def alter_get(
         query.update({"category": category})
     if shift:
         query.update({"shift": shift})
+    if week:
+        query.update({"week": week})
     if date:
         print("受到了日期参数")
         try:
