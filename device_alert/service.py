@@ -26,7 +26,7 @@ class DeviceAlertService:
     async def alert_get(self, offset=None, limit=99999, **query):
         start = time.time()
         device_alert_dict = await DeviceAlert.filter(**query).order_by('-start_time').limit(limit).offset(
-            offset * limit).all().values()
+            offset * limit).all().values('model', 'station', 'line', 'category', 'shift', 'alert_code', 'alert_desc', 'time_difference', 'start_time', 'end_time')
         t = round(float(time.time() - start), 2)
         return base_response(200, "success", f"查询到{len(device_alert_dict)}条记录,耗时{t}s", device_alert_dict)
 
